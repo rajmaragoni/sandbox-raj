@@ -1,0 +1,29 @@
+      - powershell: |
+          $result = $env:pipeline_env
+          if ($env:pipeline_env -eq '') {
+            $result = '${{parameters.env}}'
+          }
+          Write-Host "env | $result | $env:pipeline_env | ${{parameters.env}}"
+          Write-Host "##vso[task.setvariable variable=ENV]$result"
+        displayName: 'resolve env'
+        name: 'resolve_env'
+        env:
+           pipeline_env: $(env)
+      - powershell: |
+          $result = $env:pipeline_clientid
+          if ($env:pipeline_clientid -eq '') {
+            $result = '${{parameters.clientid}}'
+          }
+          Write-Host "##vso[task.setvariable variable=CLIENTID]$result"
+        displayName: 'resolve clientid'
+        name: 'resolve_clientid'
+        env:
+           pipeline_clientid: $(clientid)
+      - powershell: |
+          Write-Host "##vso[task.setvariable variable=SERVICECONNECTION]${{ parameters.serviceConnection }}"
+        displayName: 'resolve service connection'
+        name: 'resolve_serviceConnection'
+      - powershell: |
+          Write-Host "clientid $(CLIENTID)"
+          Write-Host "env $(ENV)"
+          Write-Host "serviceconnection $(SERVICECONNECTION)"
